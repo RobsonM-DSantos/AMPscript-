@@ -1,0 +1,120 @@
+ <tr bgcolor="#FFFFFF">
+                                <td colspan="2" width="600" height="167"
+                                    style="padding-right: 37px; padding-left: 37px; padding-top: 32px;">
+                                    %%[
+
+                                    var
+                                    @rows,
+                                    @row,
+                                    @rowCount,
+                                    @counter
+
+
+                                    set @customerNo = AttributeValue("customerNo")
+
+
+                                    set @rows = LookupRows('DE_ABANDONED_CART_CONTENT','customerNo', @customerNo)
+
+                                    set @rowCount = rowcount(@rows)
+                                    if @rowCount > 0 then
+                                    for @counter = 1 to @rowCount do
+                                    set @row = row(@rows, @counter)
+                                    set @FPV = field(@row,'FPV')
+                                    set @FPP = field(@row,'FPP')
+                                    set @CRA = field(@row,'CRA')
+                                    set @BASE = field(@row,'BASE')
+                                    set @Codigo_Produto = field(@row,'productID')
+                                    set @MASSIVE = field(@row,'MASSIVE')
+                                    set @productName = field(@row,'productName')
+                                    set @image = field(@row,'image')
+                                    set @N2 = ""
+                                    set @N3 = ""
+                                    set @N4 = ""
+
+                           
+                                if @MASSIVE <= 0 and @FPV <= 0 and @FPP <= 0 and @CRA <= 0 then 
+                                set @N1 = @BASE
+                                set @N2 = iif(empty(@N2), " ", @N2)
+                                set @N3 = iif(empty(@N3), " ", @N3)
+                                set @N4 = iif(empty(@N4), " ", @N4)
+                                                                                                                                 
+                                elseif @MASSIVE > 0 then
+                                set @N1 = @MASSIVE
+                                set @N2 = @BASE
+                                set @N3 = subtract(@BASE, @MASSIVE)
+                                set @N3 = Concat("POUPE   ", @N3)
+                                set @N4 = iif(empty(@N4), " ", @N4) 
+
+                                elseif @FPV > 0 then
+                                set @N1 = @BASE
+                                set @N2 = iif(empty(@N2), " ", @N2)
+                                set @N3 =  @FPV 
+                                set @N4 = iif(empty(@N4), " ", @N4)                           
+
+                                elseif @FPP > 0 then
+                                set @N1 = @BASE
+                                set @N2 = iif(empty(@N2), " ", @N2)
+                                set @N3 = iif(empty(@N3), " ", @N3)
+                                set @N4 = @FPP
+
+                                elseif @CRA > 0 then
+                                set @N1 = @BASE
+                                set @N2 = iif(empty(@N2), " ", @N2)
+                                set @N3 =  @CRA
+                                set @N4 = iif(empty(@N4), " ", @N4)
+                                endif
+                                    ]%%
+                                    <table
+                                        style="float: left; border-collapse: separate; border-spacing: 16px; margin-left: -14px; margin-right: -14px;">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <table width="160" height="167"
+                                                        style=" border: 1px solid #EFEFEF; border-radius: 4px; padding: 3px 3px;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td width="160" style="text-align: center;">
+                                                                    <a style="text-decoration: none;"
+                                                                        href="%%=v(@image)=%%" target="_blank"
+                                                                        alias="imagem do pruto">
+                                                                        <img style="width: 154px; height: 152px; margin-bottom: 5px"
+                                                                            src="%%=v(@image)=%%"
+                                                                            alias="imagem do produto">
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td width="160" style="vertical-align: baseline;">
+                                                                    <p
+                                                                        style="margin-block-start: 0; margin-block-end: 0; font-style: normal; font-weight: 400; font-size: 12px; line-height: 14px; color: #616161; margin-right: 4px; margin-left: 4px; padding-bottom: 6px;">
+                                                                        <a style="text-decoration: none; color: #555555;"
+                                                                            href="#"
+                                                                            target="_blank">%%=v(@productName)=%%</a>
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td width="160"
+                                                                    style="vertical-align: baseline; border: 1px dashed #D7D7D7; border-radius: 4px;">
+                                                                    <p
+                                                                        style="margin-block-start: 0; margin-block-end: 0; font-style: normal; font-weight: 700; font-size: 17px; line-height: 18px; color: #000000; padding-top: 3px; margin-right: 4px; margin-left: 4px; padding-bottom: 5px;">
+                                                                         %%=v(@N1)=%%<small
+                                                                        style="padding-left: 5px; text-decoration: line-through; font-weight: 400; font-size: 15px; line-height: 16px; color: #555555;"> %%=v(@N2)=%%</small>  
+                                                                    </p>
+                                                                    <p 
+                                                                        style="margin-block-start: 0; margin-block-end: 0; font-style: normal; font-weight: 700; font-size: 18px; line-height: 21px; letter-spacing: 0.130769px; color: #CE181E; padding-top: 5px; margin-right: 5px; margin-left: 5px; padding-bottom: 3px;">
+                                                                         %%=v(@N3)=%%
+                                                                         </p>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        %%[ next @counter ]%%
+                                    </table>
+                                    %%[ endif ]%%
+                                </td>
+                            </tr>
